@@ -1,4 +1,6 @@
-clc 
+% Clear command window
+clc
+% Clear workspace to prevent external values altering the script.
 clear
 
 % Define suspension system equation
@@ -26,7 +28,7 @@ rootD = sqrt(springConstPerMetre - dampCoPerMass);
 
 % Define symbol t for use in function
 syms t
-% Define function
+% Define the symbolic function of the car suspension.
 systemFunc(t) = exp(-n*t) * y0 * (cos(rootD*t) + (n/rootD)*sin(rootD*t));
 
 
@@ -54,7 +56,7 @@ title("Graph of displacement in car suspension over time.")
 
 % Calculate the first three roots
 
-% % Set minimum error value used to find root.
+% Set minimum error value used to find root.
 error = 1E-3
 
 % Identify the first 3 roots as around 0.5, 2, 3.7
@@ -70,7 +72,8 @@ msgbox(sprintf(['First three roots of the spring-damper system starting ' ...
 
 
 
-% Comapare experimental data
+
+% Comapare experimental and calculated data.
 
 % Create the values for time.
 time = 2.6:0.05:3.1
@@ -85,6 +88,7 @@ calculatedDisp = double(systemFunc(time))
 msgbox(sprintf(['The values for coefficient of multiple determination and ' ...
     'standard error of the estimate were calculated to' ...
     ' be: \n R = %1.3f \n error = %1.3f'],R,e))
+
 
 
 
@@ -104,33 +108,34 @@ xlabel("Time (s)")
 ylabel("Displacement (m)")
 
 % Give graph a title
-title("Graph experimental data for the displacement in car suspension over time.")
+title("Experimental data graph for the displacement of a car wheel over time.")
 
 % Define an finer array of the same ranges as time.
-t2 = 2.6:0.01:3.1
+t2 = 2.6:0.01:3.1;
 
 % From theory saturation curve graph points are equal to 
 % the inverse of a corresponding linear graph.
-
-inverseTime = 1./time
-inverseExpDisp = (1./experimentDisp)
-
+inverseTime = 1./time;
+inverseExpDisp = 1./experimentDisp;
 
 % Calculate the linear regression of the inverse values.
-[a,b] = linear_regression(inverseTime,inverseExpDisp)
+[a,b] = linear_regression(inverseTime,inverseExpDisp);
 
 % Alpha is equal to the inverse of a.
-Alpha = 1/a
+Alpha = 1/a;
 % Beta is equal to b/a.
-Beta = b/a
+Beta = b/a;
 
 % Calculate the saturation curve using the equation (Alpha*x)/(Beta+x)
-saturationCurve = (Alpha * t2)./(Beta+t2)
+saturationCurve = (Alpha * t2)./(Beta+t2);
+
+% Plot the saturation curve.
 plot(t2,saturationCurve,'b')
 
 % Adjust the range limits so all scatter points are visible.
 xlim([2.5,3.2])
 ylim([0.065,0.2])
+
 % Define the legend of the graph.
 legend('Displacement Data Points','Saturation Line Curve','Location',"southeast")
 
@@ -147,9 +152,9 @@ function [R,e] = calcErrorAndDetermination(y,g)
 % a correct calculation.
     assert(length(y) == length(g))
     
-    meanY = mean(y)
+    meanY = mean(y);
 %     Calculate the total number of items
-    N = length(y)
+    N = length(y);
     
 % Calculate the total sum of square and residual sum
     totalSumSquares = sum((g - meanY).^2)
@@ -167,16 +172,16 @@ function [a,b] = linear_regression(x,y)
     assert(length(x) == length(y))
     
 % Calculate the sum of y,x,xy and x^2.
-    x_sum = sum(x)
-    y_sum = sum(y)
-    xy_sum = sum(x.*y)
-    x_square_sum = sum(x.^2)
+    x_sum = sum(x);
+    y_sum = sum(y);
+    xy_sum = sum(x.*y);
+    x_square_sum = sum(x.^2);
     
 % Get the length of the arrays
-    N = length(x)
+    N = length(x);
     
 % To avoid rewriting code calculate the shared denominator.
-    denom = N*x_square_sum - x_sum^2
+    denom = N*x_square_sum - x_sum^2;
     
 % Calculate a and b.
     a = (y_sum*x_square_sum - xy_sum*x_sum) / denom

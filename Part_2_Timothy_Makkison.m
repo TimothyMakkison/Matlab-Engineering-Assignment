@@ -1,4 +1,6 @@
+% Clear command window
 clc
+% Clear workspace to prevent external values altering the script.
 clear
 
 % Where A is the stress tensor at a specific point in the coiled spring.
